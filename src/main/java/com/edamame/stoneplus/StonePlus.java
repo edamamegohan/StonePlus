@@ -41,6 +41,13 @@ public final class StonePlus extends JavaPlugin implements Listener {
         ytterbiumMeta.setLore(Arrays.asList("レアメタルの一種", "Yb株式会社の名前の由来にもなっている", "一応ダイヤモンドと同じように使えるらしい"));
         ytterbium.setItemMeta(ytterbiumMeta);
 
+        //プラチナの追加
+        ItemStack platinum = new ItemStack(Material.GOLD_INGOT);
+        ItemMeta platinumMeta = platinum.getItemMeta();
+        platinumMeta.setDisplayName("プラチナ");
+        platinumMeta.setLore(Arrays.asList("めっちゃきれい", "一応金インゴットと同じように使えるらしい"));
+        platinum.setItemMeta(platinumMeta);
+
         Block block = event.getBlock();
         if(block.getType() == Material.STONE){
             //3%で宝石をドロップ
@@ -52,8 +59,14 @@ public final class StonePlus extends JavaPlugin implements Listener {
                     block.setType(Material.AIR);
                     block.getWorld().dropItem(block.getLocation(), aluminium);
                 }
+                //20%でプラチナ
+                else if (r<0.5) {
+                    event.setCancelled(true);
+                    block.setType(Material.AIR);
+                    block.getWorld().dropItem(block.getLocation(), platinum);
+                }
                 //1%でイッテルビウム
-                else if (r < 0.31) {
+                else if (r < 0.51) {
                     event.setCancelled(true);
                     block.setType(Material.AIR);
                     block.getWorld().dropItem(block.getLocation(), ytterbium);
