@@ -3,6 +3,7 @@ package com.edamame.stoneplus;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,12 +34,30 @@ public final class StonePlus extends JavaPlugin implements Listener {
         aluminiumMeta.setLore(Arrays.asList("アルミニウムの鉱物", "一応鉄塊と同じように使えるらしい"));
         aluminium.setItemMeta(aluminiumMeta);
 
+        //イッテルビウムの追加
+        ItemStack ytterbium = new ItemStack(Material.DIAMOND);
+        ItemMeta ytterbiumMeta = ytterbium.getItemMeta();
+        ytterbiumMeta.setDisplayName("イッテルビウム");
+        ytterbiumMeta.setLore(Arrays.asList("レアメタルの一種", "Yb株式会社の名前の由来にもなっている", "一応ダイヤモンドと同じように使えるらしい"));
+        ytterbium.setItemMeta(ytterbiumMeta);
+
         Block block = event.getBlock();
         if(block.getType() == Material.STONE){
-            if(Math.random() < 0.05){
-                event.setCancelled(true);
-                block.setType(Material.AIR);
-                block.getWorld().dropItem(block.getLocation(), aluminium);
+            //3%で宝石をドロップ
+            if(Math.random() < 0.03){
+                double r = Math.random();
+                //30%でアルミニウム
+                if(r < 0.3){
+                    event.setCancelled(true);
+                    block.setType(Material.AIR);
+                    block.getWorld().dropItem(block.getLocation(), aluminium);
+                }
+                //1%でイッテルビウム
+                else if (r < 0.31) {
+                    event.setCancelled(true);
+                    block.setType(Material.AIR);
+                    block.getWorld().dropItem(block.getLocation(), ytterbium);
+                }
             }
         }
     }
