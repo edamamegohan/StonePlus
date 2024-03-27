@@ -1,0 +1,4 @@
+name: StonePlus
+version: '1.0-SNAPSHOT'
+main: com.edamame.stoneplus.StonePlus
+api-version: '1.20'

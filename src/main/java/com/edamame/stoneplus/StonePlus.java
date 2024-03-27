@@ -3,7 +3,6 @@ package com.edamame.stoneplus;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Arrays;
 
 public final class StonePlus extends JavaPlugin implements Listener {
+    database database = new database();
+
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this,this);
@@ -22,7 +23,7 @@ public final class StonePlus extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-
+        database.CloseConnection();
     }
 
     @EventHandler
