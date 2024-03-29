@@ -1,6 +1,7 @@
 package com.edamame.stoneplus;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
@@ -23,7 +24,7 @@ public class database {
     public void CreateTable(){
         try {
             this.statement = connection.createStatement();
-            this.statement.executeUpdate("create table minedata(uuid text, name text, amount integer)");
+            this.statement.executeUpdate("create table minedata(uuid text, name text, count integer)");
             Bukkit.getLogger().info("ーーーーStonePlusーーーー");
             Bukkit.getLogger().info("Table created.");
             Bukkit.getLogger().info("ーーーーーーーーーーーーー");
@@ -40,6 +41,42 @@ public class database {
     }
 
     public void AddPlayerData(Player player){
+        try{
+            this.statement = connection.createStatement();
+            String uuid = player.getUniqueId().toString();
+            String name = player.getDisplayName();
+            ResultSet resultSet = this.statement.executeQuery("select * from minedata where uuid = '" + uuid + "'");
 
+            if(!resultSet.next()) {
+                this.statement = connection.createStatement();
+                this.statement.executeUpdate("insert into minedata values('" + uuid + "', '" + name + "', 0)");
+                player.sendMessage(ChatColor.GREEN + "[StonePlus] " +
+                        ChatColor.WHITE + name + "の採掘データを作成しました");
+            }
+
+            resultSet.close();
+            statement.close();
+
+        }catch (SQLException e){
+            Bukkit.getLogger().warning(e.toString());
+        }
+    }
+
+    public void IncreaseCount(Player player){
+        try{
+            this.statement = connection.createStatement();
+            String uuid = player.getUniqueId().toString();
+
+            ResultSet resultSet = this.statement.executeQuery("select count from moneydata where uuid = '" + uuid + "'");
+            int count = resultSet.getInt("count");
+
+            count++;
+
+            this.statement.executeUpdate("update minedata set count = " + count + " where uuid = '" + uuid + "'");
+            resultSet.close();
+            statement.close();
+        }catch (SQLException e){
+            Bukkit.getLogger().warning(e.toString());
+        }
     }
 }

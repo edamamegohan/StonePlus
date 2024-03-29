@@ -3,9 +3,13 @@ package com.edamame.stoneplus;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,9 +20,20 @@ public final class StonePlus extends JavaPlugin implements Listener {
     database database = new database();
 
     @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(command.getName().equalsIgnoreCase("create")){
+            Player player = (Player) sender;
+            database.AddPlayerData(player);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getLogger().info("StonePlus is loaded.");
+        database.CreateTable();
     }
 
     @Override
@@ -54,6 +69,9 @@ public final class StonePlus extends JavaPlugin implements Listener {
 
         Block block = event.getBlock();
         if(block.getType() == Material.STONE){
+            //採掘数を1増加
+            database.IncreaseCount(event.getPlayer());
+
             //3%で宝石をドロップ
             if(Math.random() < 0.03){
                 event.setCancelled(true);
@@ -73,5 +91,11 @@ public final class StonePlus extends JavaPlugin implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerJoinEvent(PlayerJoinEvent event){
+        Player player = event.getPlayer();
+        database.AddPlayerData(player);
     }
 }
