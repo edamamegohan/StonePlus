@@ -1,6 +1,7 @@
 package com.edamame.stoneplus;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -21,10 +22,11 @@ public final class StonePlus extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(command.getName().equalsIgnoreCase("create")){
+        if(command.getName().equalsIgnoreCase("mine")){
             Player player = (Player) sender;
-            database.AddPlayerData(player);
-            return true;
+            int count = database.CheckCount(player);
+            player.sendMessage(ChatColor.GREEN + "ーーーStonePlusーーー");
+            player.sendMessage("現在の採掘量：" + count);
         }
         return false;
     }
@@ -43,6 +45,8 @@ public final class StonePlus extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event){
+        Player player = event.getPlayer();
+
         //アルミニウムの追加
         ItemStack aluminium = new ItemStack(Material.IRON_NUGGET);
         ItemMeta aluminiumMeta = aluminium.getItemMeta();
@@ -70,7 +74,7 @@ public final class StonePlus extends JavaPlugin implements Listener {
         Block block = event.getBlock();
         if(block.getType() == Material.STONE){
             //採掘数を1増加
-            database.IncreaseCount(event.getPlayer());
+            database.IncreaseCount(player);
 
             //3%で宝石をドロップ
             if(Math.random() < 0.03){

@@ -24,7 +24,7 @@ public class database {
     public void CreateTable(){
         try {
             this.statement = connection.createStatement();
-            this.statement.executeUpdate("create table minedata(uuid text, name text, count integer)");
+            this.statement.executeUpdate("create table minedata(uuid text, name text, minecount integer)");
             Bukkit.getLogger().info("ーーーーStonePlusーーーー");
             Bukkit.getLogger().info("Table created.");
             Bukkit.getLogger().info("ーーーーーーーーーーーーー");
@@ -67,16 +67,33 @@ public class database {
             this.statement = connection.createStatement();
             String uuid = player.getUniqueId().toString();
 
-            ResultSet resultSet = this.statement.executeQuery("select count from moneydata where uuid = '" + uuid + "'");
+            ResultSet resultSet = this.statement.executeQuery("select minecount from minedata where uuid = '" + uuid + "'");
             int count = resultSet.getInt("count");
 
             count++;
 
-            this.statement.executeUpdate("update minedata set count = " + count + " where uuid = '" + uuid + "'");
+            this.statement.executeUpdate("update minedata set minecount = " + count + " where uuid = '" + uuid + "'");
             resultSet.close();
             statement.close();
         }catch (SQLException e){
             Bukkit.getLogger().warning(e.toString());
+        }
+    }
+
+    public int CheckCount(Player player){
+        try{
+            this.statement = connection.createStatement();
+            String uuid = player.getUniqueId().toString();
+
+            ResultSet resultSet = this.statement.executeQuery("select minecount from minedata where uuid = '" + uuid + "'");
+            int count = resultSet.getInt("minecount");
+
+            resultSet.close();
+            statement.close();
+            return count;
+        }catch (SQLException e){
+            Bukkit.getLogger().warning(e.toString());
+            return -1;
         }
     }
 }
