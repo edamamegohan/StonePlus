@@ -68,7 +68,7 @@ public class database {
             String uuid = player.getUniqueId().toString();
 
             ResultSet resultSet = this.statement.executeQuery("select minecount from minedata where uuid = '" + uuid + "'");
-            int count = resultSet.getInt("count");
+            int count = resultSet.getInt("minecount");
 
             count++;
 
